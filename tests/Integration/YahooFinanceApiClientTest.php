@@ -15,13 +15,13 @@ class YahooFinanceApiClientTest extends DatabaseDependantTestCaseTest
     {
         //Set Up
         $yahooFinanceApiClient = self::$kernel->getContainer()->get('yahoo-finance-api-client');
-
         // Do Something
-        $response = $yahooFinanceApiClient->fetchStockProfile('AMZN','US');
+        $response = $yahooFinanceApiClient->fetchStockProfile(symbol:'AMZN',region:'US');
 
-        $stockProfile = json_decode($response['content']);
+        $stockProfile = json_decode($response->getContent());
 
         // Assert
+        $this->assertEquals(200, $response->getStatusCode());
         $this->assertSame('AMZN', $stockProfile->symbol);
         $this->assertSame('Amazon.com, Inc.', $stockProfile->shortName);
         $this->assertSame('US', $stockProfile->region);
@@ -31,5 +31,4 @@ class YahooFinanceApiClientTest extends DatabaseDependantTestCaseTest
         $this->assertIsNumeric($stockProfile->previousClose);
         $this->assertIsNumeric($stockProfile->priceChange);
     }
-
 }
